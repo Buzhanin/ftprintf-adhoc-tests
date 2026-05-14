@@ -1,0 +1,4 @@
+*.o
+libft/
+test_libft
+tempfile
