@@ -6,7 +6,7 @@
 /*   By: ppernati <ppernati@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 19:17:12 by ppernati          #+#    #+#             */
-/*   Updated: 2026/05/14 21:17:44 by ppernati         ###   ########.fr       */
+/*   Updated: 2026/05/15 18:35:36 by ppernati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	simple(void)
 		return;
 	}
 
-	g_test_trap_subprocess(NULL, 3000000, G_TEST_SUBPROCESS_DEFAULT);
+	g_test_trap_subprocess(NULL, 3000000, 0);
 	g_test_trap_assert_passed();
 	g_test_trap_assert_stdout("Test");
 }
@@ -50,7 +50,7 @@ void	percent(void)
 		return;
 	}
 
-	g_test_trap_subprocess(NULL, 3000000, G_TEST_SUBPROCESS_DEFAULT);
+	g_test_trap_subprocess(NULL, 3000000, 0);
 	g_test_trap_assert_passed();
 	g_test_trap_assert_stdout("%%Test%%TestTest%Test%Test%%%");
 }
@@ -68,7 +68,7 @@ void	integer(void)
 		return;
 	}
 
-	g_test_trap_subprocess(NULL, 3000000, G_TEST_SUBPROCESS_DEFAULT);
+	g_test_trap_subprocess(NULL, 3000000, 0);
 	g_test_trap_assert_passed();
 	g_test_trap_assert_stdout("05100*****2147483647##-2147483648##1-23");
 }
@@ -86,7 +86,7 @@ void	unsigned_integer(void)
 		return;
 	}
 
-	g_test_trap_subprocess(NULL, 3000000, G_TEST_SUBPROCESS_DEFAULT);
+	g_test_trap_subprocess(NULL, 3000000, 0);
 	g_test_trap_assert_passed();
 	g_test_trap_assert_stdout("05100*****4294967295##2147483648##142949672943");
 }
@@ -105,7 +105,7 @@ void	character(void)
 		return;
 	}
 
-	g_test_trap_subprocess(NULL, 3000000, G_TEST_SUBPROCESS_DEFAULT);
+	g_test_trap_subprocess(NULL, 3000000, 0);
 	g_test_trap_assert_passed();
 	g_test_trap_assert_stdout("1A=*****\200## ##1\3763");
 }
