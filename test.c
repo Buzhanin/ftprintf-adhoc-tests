@@ -6,7 +6,7 @@
 /*   By: ppernati <ppernati@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 19:17:12 by ppernati          #+#    #+#             */
-/*   Updated: 2026/05/15 18:35:36 by ppernati         ###   ########.fr       */
+/*   Updated: 2026/05/15 19:55:21 by ppernati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "ft_printf.h"
 #include <stdio.h>
 
-#if 1
+#ifdef ORIGINAL
 	#define ft_printf printf
 #endif
 
@@ -96,18 +96,72 @@ void	character(void)
 {
 	if (g_test_subprocess())
 	{
-		g_assert_cmpuint(ft_printf("%c", '\0'), ==, 1);
+		g_assert_cmpuint(ft_printf("%c", '1'), ==, 1);
 		g_assert_cmpuint(ft_printf("%c", 'A'), ==, 1);
 		g_assert_cmpuint(ft_printf("%c***", '='), ==, 4);
 		g_assert_cmpuint(ft_printf("**%c", '\200'), ==, 3);
 		g_assert_cmpuint(ft_printf("##%c##", ' '), ==, 5);
 		g_assert_cmpuint(ft_printf("%c%c%c", '1', (char)-2, '3'), ==, 3);
+		g_assert_cmpuint(ft_printf("%c%c%c", '\0', '\0', '\0'), ==, 3);
 		return;
 	}
 
 	g_test_trap_subprocess(NULL, 3000000, 0);
 	g_test_trap_assert_passed();
 	g_test_trap_assert_stdout("1A=*****\200## ##1\3763");
+}
+
+void	string(void)
+{
+	if (g_test_subprocess())
+	{
+		g_assert_cmpuint(ft_printf("%s", (char *)NULL), ==, 6);
+		g_assert_cmpuint(ft_printf("%s", ""), ==, 0);
+		g_assert_cmpuint(ft_printf("%s##", "HA"), ==, 4);
+		g_assert_cmpuint(ft_printf("##%s", "HA"), ==, 4);
+		g_assert_cmpuint(ft_printf("##%s##", "HO"), ==, 6);
+		return;
+	}
+
+	g_test_trap_subprocess(NULL, 3000000, 0);
+	g_test_trap_assert_passed();
+	g_test_trap_assert_stdout("(null)HA####HA##HO##");
+}
+
+void	hex(void)
+{
+	if (g_test_subprocess())
+	{
+		g_assert_cmpuint(ft_printf("%x", 0), ==, 1);
+		g_assert_cmpuint(ft_printf("%x", -10), ==, 8);
+		g_assert_cmpuint(ft_printf("%x", (unsigned int)4294967295), ==, 8);
+		g_assert_cmpuint(ft_printf("%x", (unsigned int)-2147483648), ==, 8);
+		g_assert_cmpuint(ft_printf("%x", 2147483647), ==, 8);
+		g_assert_cmpuint(ft_printf("%x", 11259375), ==, 6);
+		return;
+	}
+
+	g_test_trap_subprocess(NULL, 3000000, 0);
+	g_test_trap_assert_passed();
+	g_test_trap_assert_stdout("0fffffff6ffffffff800000007fffffffabcdef");
+}
+
+void	upperhex(void)
+{
+	if (g_test_subprocess())
+	{
+		g_assert_cmpuint(ft_printf("%X", 0), ==, 1);
+		g_assert_cmpuint(ft_printf("%X", -10), ==, 8);
+		g_assert_cmpuint(ft_printf("%X", (unsigned int)4294967295), ==, 8);
+		g_assert_cmpuint(ft_printf("%X", (unsigned int)-2147483648), ==, 8);
+		g_assert_cmpuint(ft_printf("%X", 2147483647), ==, 8);
+		g_assert_cmpuint(ft_printf("%X", 11259375), ==, 6);
+		return;
+	}
+
+	g_test_trap_subprocess(NULL, 3000000, 0);
+	g_test_trap_assert_passed();
+	g_test_trap_assert_stdout("0FFFFFFF6FFFFFFFF800000007FFFFFFFABCDEF");
 }
 
 int	main(int argc, char *argv[])
@@ -119,5 +173,8 @@ int	main(int argc, char *argv[])
 	g_test_add_func("/ft_printf/integer", integer);
 	g_test_add_func("/ft_printf/unsigned_integer", unsigned_integer);
 	g_test_add_func("/ft_printf/character", character);
+	g_test_add_func("/ft_printf/string", string);
+	g_test_add_func("/ft_printf/hex", hex);
+	g_test_add_func("/ft_printf/upperhex", upperhex);
 	return (g_test_run());
 }
