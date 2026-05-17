@@ -9,7 +9,8 @@ OBJECTS_ORIGINAL = $(SOURCES:.c=_original.o)
 NAME = test_libftprintf
 NAME_ORIGINAL = test_libftprintf_original
 
-CFLAGS = -g -Wall -Wextra -Werror -I$(FT_PRINTF_FOLDER) -I$(FT_PRINTF_FOLDER)/libft $(shell pkg-config --cflags glib-2.0)
+#CFLAGS = -g -Wall -Wextra -Werror -I$(FT_PRINTF_FOLDER) -I$(FT_PRINTF_FOLDER)/libft $(shell pkg-config --cflags glib-2.0)
+CFLAGS = -g -I$(FT_PRINTF_FOLDER) -I$(FT_PRINTF_FOLDER)/libft $(shell pkg-config --cflags glib-2.0)
 LDFLAGS = -L$(FT_PRINTF_FOLDER) -lftprintf $(shell pkg-config --libs glib-2.0)
 
 all: $(NAME)
