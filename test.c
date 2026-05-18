@@ -6,7 +6,7 @@
 /*   By: ppernati <ppernati@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 19:17:12 by ppernati          #+#    #+#             */
-/*   Updated: 2026/05/17 23:24:09 by ppernati         ###   ########.fr       */
+/*   Updated: 2026/05/18 17:24:24 by ppernati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ void	pointer(void)
 {
 	if (g_test_subprocess())
 	{
-		g_assert_cmpuint(ft_printf("%p", NULL), ==, 3);
+		g_assert_cmpuint(ft_printf("%p", NULL), ==, 5);
 		g_assert_cmpuint(ft_printf("%p", (void*)100), ==, 4);
 		g_assert_cmpuint(ft_printf("%p", (void*)-100), ==, 18);
 		g_assert_cmpuint(ft_printf("%p", (void*)1000000000000000000), ==, 17);
@@ -159,7 +159,7 @@ void	pointer(void)
 
 	g_test_trap_subprocess(NULL, 3000000, 0);
 	g_test_trap_assert_passed();
-	g_test_trap_assert_stdout("0x00x640xffffffffffffff9c0xde0b6b3a76400000x7fffffffffffffff");
+	g_test_trap_assert_stdout("(nil)0x640xffffffffffffff9c0xde0b6b3a76400000x7fffffffffffffff");
 }
 void	hex(void)
 {
@@ -280,6 +280,7 @@ void	precision(void)
 	if (g_test_subprocess())
 	{
 		g_assert_cmpuint(ft_printf("[%10.2s]", "hello"), ==, 12);
+		g_assert_cmpuint(ft_printf("[%-10.2s]", "hello"), ==, 12);
 		g_assert_cmpuint(ft_printf("[%-+10.5i]", 100), ==, 12);
 		g_assert_cmpuint(ft_printf("[%10.0s]", "hello"), ==, 12);
 		g_assert_cmpuint(ft_printf("[%-+10.0i]", 100), ==, 12);
@@ -290,31 +291,117 @@ void	precision(void)
 		g_assert_cmpuint(ft_printf("[%.7x]", 0), ==, 9);
 		g_assert_cmpuint(ft_printf("[%#.7x]", 100), ==, 11);
 		g_assert_cmpuint(ft_printf("[%#.7x]", 0), ==, 9);
+		g_assert_cmpuint(ft_printf("[%.7p]", (void *)1), ==, 11);
 		return;
 	}
 
 	g_test_trap_subprocess(NULL, 3000000, 0);
 	g_test_trap_assert_passed();
-	g_test_trap_assert_stdout("[        he][+00100    ][          ][+100      ][][+100      ][][0000064][0000000][0x0000064][0000000]");
+	g_test_trap_assert_stdout("[        he][he        ][+00100    ][          ][+100      ][][+100      ][][0000064][0000000][0x0000064][0000000][0x0000001]");
 }
 
 void	zero(void)
 {
 	if (g_test_subprocess())
 	{
-		g_assert_cmpuint(ft_printf("[%010s]", "hi"), ==, 12);
 		g_assert_cmpuint(ft_printf("[%010i]", 500), ==, 12);
 		g_assert_cmpuint(ft_printf("[%+010i]", 500), ==, 12);
+		g_assert_cmpuint(ft_printf("[%-010i]", 500), ==, 12);
 		g_assert_cmpuint(ft_printf("[% 010i]", 500), ==, 12);
+		g_assert_cmpuint(ft_printf("[% 010i]", -500), ==, 12);
 		g_assert_cmpuint(ft_printf("[% 010.2i]", 500), ==, 12);
 		return;
 	}
 
 	g_test_trap_subprocess(NULL, 3000000, 0);
 	g_test_trap_assert_passed();
-	g_test_trap_assert_stdout("[0000000500][+000000500][ 000000500][       500]");
+	g_test_trap_assert_stdout("[0000000500][+000000500][500       ][ 000000500][-000000500][       500]");
 }
 
+void	zero_unsigned(void)
+{
+	if (g_test_subprocess())
+	{
+		g_assert_cmpuint(ft_printf("[%010u]", 500), ==, 12);
+		g_assert_cmpuint(ft_printf("[%+010u]", 500), ==, 12);
+		g_assert_cmpuint(ft_printf("[%-010u]", 500), ==, 12);
+		g_assert_cmpuint(ft_printf("[% 010u]", 500), ==, 12);
+		g_assert_cmpuint(ft_printf("[% 010.2u]", 500), ==, 12);
+		return;
+	}
+
+	g_test_trap_subprocess(NULL, 3000000, 0);
+	g_test_trap_assert_passed();
+	g_test_trap_assert_stdout("[0000000500][0000000500][500       ][0000000500][       500]");
+}
+
+void	zero_pointer(void)
+{
+	if (g_test_subprocess())
+	{
+		g_assert_cmpuint(ft_printf("[%010p]", (void *)1), ==, 12);
+		g_assert_cmpuint(ft_printf("[%-010p]", (void *)1), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010.5p]", (void *)1), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010.0p]", (void *)1), ==, 12);
+		return;
+	}
+
+	g_test_trap_subprocess(NULL, 3000000, 0);
+	g_test_trap_assert_passed();
+	g_test_trap_assert_stdout("[0x00000001][0x1       ][   0x00001][       0x1]");
+}
+
+void	zero_hex(void)
+{
+	if (g_test_subprocess())
+	{
+		g_assert_cmpuint(ft_printf("[%010.x]", (void *)1), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010x]", (void *)1), ==, 12);
+		g_assert_cmpuint(ft_printf("[%-010x]", (void *)1), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010.5x]", (void *)1), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010.0x]", (void *)1), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010.x]", (void *)1), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010.x]", (void *)0), ==, 12);
+		return;
+	}
+
+	g_test_trap_subprocess(NULL, 3000000, 0);
+	g_test_trap_assert_passed();
+	g_test_trap_assert_stdout("[         1][0000000001][1         ][     00001][         1][         1][          ]");
+}
+void	zero_int(void)
+{
+	if (g_test_subprocess())
+	{
+		g_assert_cmpuint(ft_printf("[%010.i]", (void *)100), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010i]", (void *)100), ==, 12);
+		g_assert_cmpuint(ft_printf("[%-010i]", (void *)100), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010.5i]", (void *)100), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010.5i]", (void *)100), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010.0i]", (void *)100), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010.i]", (void *)100), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010.i]", (void *)0), ==, 12);
+		return;
+	}
+
+	g_test_trap_subprocess(NULL, 3000000, 0);
+	g_test_trap_assert_passed();
+	g_test_trap_assert_stdout("[       100][0000000100][100       ][     00100][     00100][       100][       100][          ]");
+}
+
+void	zero_other(void)
+{
+	if (g_test_subprocess())
+	{
+		g_assert_cmpuint(ft_printf("[%010s]", "hi"), ==, 12);
+		g_assert_cmpuint(ft_printf("[%010c]", 'A'), ==, 12);
+		return;
+	}
+
+	g_test_trap_subprocess(NULL, 3000000, 0);
+	g_test_trap_assert_passed();
+	g_test_trap_assert_stdout("[        hi][         A]");
+}
 int	main(int argc, char *argv[])
 {
 	setlocale(LC_ALL, "");
@@ -336,5 +423,10 @@ int	main(int argc, char *argv[])
 	g_test_add_func("/ft_printf_bonus/width", width);
 	g_test_add_func("/ft_printf_bonus/precision", precision);
 	g_test_add_func("/ft_printf_bonus/zero", zero);
+	g_test_add_func("/ft_printf_bonus/zero_unsigned", zero_unsigned);
+	g_test_add_func("/ft_printf_bonus/zero_pointer", zero_pointer);
+	g_test_add_func("/ft_printf_bonus/zero_hex", zero_hex);
+	g_test_add_func("/ft_printf_bonus/zero_int", zero_int);
+	g_test_add_func("/ft_printf_bonus/zero_other", zero_other);
 	return (g_test_run());
 }
