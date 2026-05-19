@@ -9,6 +9,8 @@ OBJECTS_ORIGINAL = $(SOURCES:.c=_original.o)
 NAME = test_libftprintf
 NAME_ORIGINAL = test_libftprintf_original
 
+BONUS_COMMAND = bonus
+
 #CFLAGS = -g -Wall -Wextra -Werror -I$(FT_PRINTF_FOLDER) -I$(FT_PRINTF_FOLDER)/libft $(shell pkg-config --cflags glib-2.0)
 CFLAGS = -g -I$(FT_PRINTF_FOLDER) -I$(FT_PRINTF_FOLDER)/libft $(shell pkg-config --cflags glib-2.0)
 LDFLAGS = -L$(FT_PRINTF_FOLDER) -lftprintf $(shell pkg-config --libs glib-2.0)
@@ -32,7 +34,7 @@ $(NAME_ORIGINAL): $(FT_PRINTF_FOLDER)/$(FT_PRINTF_NAME) $(OBJECTS_ORIGINAL)
 	cc -o $(NAME_ORIGINAL) $(OBJECTS_ORIGINAL) $(LDFLAGS)
 
 $(FT_PRINTF_FOLDER)/$(FT_PRINTF_NAME): FORCE
-	make -C $(FT_PRINTF_FOLDER)
+	make -C $(FT_PRINTF_FOLDER) $(BONUS_COMMAND)
 
 FORCE:
 

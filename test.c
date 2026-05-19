@@ -6,7 +6,7 @@
 /*   By: ppernati <ppernati@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 19:17:12 by ppernati          #+#    #+#             */
-/*   Updated: 2026/05/18 17:24:24 by ppernati         ###   ########.fr       */
+/*   Updated: 2026/05/19 18:14:35 by ppernati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ void	integer_d(void)
 	g_test_trap_assert_passed();
 	g_test_trap_assert_stdout("05100*****2147483647##-2147483648##1-23");
 }
+
 void	unsigned_integer(void)
 {
 	if (g_test_subprocess())
@@ -402,6 +403,48 @@ void	zero_other(void)
 	g_test_trap_assert_passed();
 	g_test_trap_assert_stdout("[        hi][         A]");
 }
+
+void	mixed_bonus(void)
+{
+	if (g_test_subprocess())
+	{
+		g_assert_cmpuint(ft_printf("%-d", INT_MIN), ==, 11);
+		g_assert_cmpuint(ft_printf("%04d", 0), ==, 4);
+		g_assert_cmpuint(ft_printf("%04d", 1), ==, 4);
+		return;
+	}
+
+	g_test_trap_subprocess(NULL, 3000000, 0);
+	g_test_trap_assert_passed();
+	g_test_trap_assert_stdout("-214748364800000001");
+}
+
+void	read_params(void)
+{
+	if (g_test_subprocess())
+	{
+		g_assert_cmpuint(ft_printf("[%-*.*s]", 10, 2, "Hello"), ==, 12);
+		return;
+	}
+
+	g_test_trap_subprocess(NULL, 3000000, 0);
+	g_test_trap_assert_passed();
+	g_test_trap_assert_stdout("[He        ]");
+}
+
+void	evaluation(void)
+{
+	if (g_test_subprocess())
+	{
+		ft_printf("");
+		return;
+	}
+
+	g_test_trap_subprocess(NULL, 3000000, 0);
+	g_test_trap_assert_passed();
+	g_test_trap_assert_stdout("");
+}
+
 int	main(int argc, char *argv[])
 {
 	setlocale(LC_ALL, "");
@@ -417,6 +460,7 @@ int	main(int argc, char *argv[])
 	g_test_add_func("/ft_printf/upperhex", upperhex);
 	g_test_add_func("/ft_printf/percent", percent);
 	g_test_add_func("/ft_printf/mixed", mixed);
+	g_test_add_func("/ft_printf/evaluation", evaluation);
 	g_test_add_func("/ft_printf_bonus/hash", hash);
 	g_test_add_func("/ft_printf_bonus/space", space);
 	g_test_add_func("/ft_printf_bonus/plus", plus);
@@ -428,5 +472,7 @@ int	main(int argc, char *argv[])
 	g_test_add_func("/ft_printf_bonus/zero_hex", zero_hex);
 	g_test_add_func("/ft_printf_bonus/zero_int", zero_int);
 	g_test_add_func("/ft_printf_bonus/zero_other", zero_other);
+	g_test_add_func("/ft_printf_bonus/read_params", read_params);
+	g_test_add_func("/ft_printf/mixed_bonus", mixed_bonus);
 	return (g_test_run());
 }
